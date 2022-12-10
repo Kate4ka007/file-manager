@@ -4,7 +4,7 @@ import fs from 'fs';
 import { pipeline } from 'stream';
 import path from 'path';
 import url from 'url';
-// import { whatDirectoryIsFileIn } from './src/functions/common.js';
+import { copyFile } from './src/functions/copyFile.js';
 
 class File {
   constructor(name, type) {
@@ -94,43 +94,34 @@ const app = () => {
 
     if (data.startsWith('cp')) {
       try {
-        const path_to_file = data.split(' ')[1];
-        const path_to_new_directory = data.split(' ')[2];
-        const current_path = process.cwd();
-        const full_path_to_file = path.join(current_path, path_to_file);
-        const file_name = path_to_file.split('/').pop();
-        const full_path_to_new_file = path.join(path_to_new_directory, file_name);
-
-        /*         fs.writeFile(full_path_to_new_file, '', { flag: 'wx' }, (error) => {
-                  if (error) {
-                    console.log(error);
-                    throw new Error('Something went wrong, maybe file already exists');
-                  }
-                }); */
-
-        fs.open(full_path_to_new_file, 'r', (err, fd) => {
-          if (err) {
-            const readStream = fs.createReadStream(full_path_to_file, 'utf-8');
-            const writable = fs.createWriteStream(full_path_to_new_file);
-            let result = '';
-
-            readStream.on('data', (chunk) => {
-              result += chunk;
-            });
-            readStream.on('end', () => {
-              writable.write(result);
-            });
-            readStream.on('error', (error) => {
-              console.log(error);
-              throw new Error('Something went wrong');
-            });
-          } else {
-            console.log('file already exists');
-          }
-        });
-
-
-
+        /*  const path_to_file = data.split(' ')[1];
+         const path_to_new_directory = data.split(' ')[2];
+         const current_path = process.cwd();
+         const full_path_to_file = path.join(current_path, path_to_file);
+         const file_name = path_to_file.split('/').pop();
+         const full_path_to_new_file = path.join(path_to_new_directory, file_name);
+ 
+         fs.open(full_path_to_new_file, 'r', (err, fd) => {
+           if (err) {
+             const readStream = fs.createReadStream(full_path_to_file, 'utf-8');
+             const writable = fs.createWriteStream(full_path_to_new_file);
+             let result = '';
+ 
+             readStream.on('data', (chunk) => {
+               result += chunk;
+             });
+             readStream.on('end', () => {
+               writable.write(result);
+             });
+             readStream.on('error', (error) => {
+               console.log(error);
+               throw new Error('Something went wrong');
+             });
+           } else {
+             console.log('file already exists');
+           }
+         }); */
+        copyFile(data);
 
       } catch (error) {
         console.log(error);
