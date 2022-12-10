@@ -1,9 +1,11 @@
 import process from 'process';
-import { readdir, rename } from 'fs/promises';
+import { readdir } from 'fs/promises';
 import fs from 'fs';
 import path from 'path';
 import { copyFile } from './functions/copyFile.js';
 import goodBye from './functions/goodBye.js';
+import { renameFile } from './functions/renameFile.js';
+import { addEmptyFile } from './functions/addEmptyFile.js';
 
 class File {
   constructor(name, type) {
@@ -58,12 +60,13 @@ export const checkData = (data) => {
 
   if (data.startsWith('add')) {
     try {
-      fs.writeFile(data.split(' ')[1], '', { flag: 'wx' }, (error) => {
-        if (error) {
-          console.log(error);
-          throw new Error(ERROR_MESSAGE);
-        }
-      });
+      /*       fs.writeFile(data.split(' ')[1], '', { flag: 'wx' }, (error) => {
+              if (error) {
+                console.log(error);
+                throw new Error(ERROR_MESSAGE);
+              }
+            }); */
+      addEmptyFile(data);
 
     } catch (error) {
       console.error('error: ', 'something went wrong');
@@ -71,16 +74,7 @@ export const checkData = (data) => {
   }
 
   if (data.startsWith('rn')) {
-    const pathOldFile = data.split(' ')[1];
-    const newFileName = data.split(' ')[2];
-    const pathToNewFile = pathOldFile.split('/');
-    pathToNewFile.pop();
-    let pathNewFile = path.join(pathToNewFile.join('/'), newFileName);
-    rename(pathOldFile, pathNewFile)
-      .catch((error) => {
-        console.log(error);
-        throw new Error('something went wrong');
-      });
+    renameFile(data);
   }
 
   if (data.startsWith('cp')) {
