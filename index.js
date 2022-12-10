@@ -1,8 +1,10 @@
 import process from 'process';
-import { readdir } from 'fs/promises';
+import { readdir, rename, readFile, writeFile } from 'fs/promises';
 import fs from 'fs';
 import { pipeline } from 'stream';
 import path from 'path';
+import url from 'url';
+// import { whatDirectoryIsFileIn } from './src/functions/common.js';
 
 class File {
   constructor(name, type) {
@@ -14,12 +16,12 @@ class File {
 
 const app = () => {
   const args = process.argv.slice(2);
-  const userName = args[0].split('=')[1];
-  console.log(`Welcome to the File Manager, ${userName}!`);
+  const userName = () => args[0] ? args[0].split('=')[1] : 'Anonymous';
+  console.log(`Welcome to the File Manager, ${userName()}!`);
   process.stdin.on('data', (data) => {
     data = data.toString().trim();
     if (data === ".exit") {
-      console.log(`👋 Thank you for using File Manager, ${userName}, goodbye!`);
+      console.log(`👋 Thank you for using File Manager, ${userName()}, goodbye!`);
       console.log(`🎁 Merry Christmas and Happy New Year! 🎄`);
       process.exit();
     }
@@ -66,19 +68,74 @@ const app = () => {
     if (data.startsWith('add')) {
       try {
         fs.writeFile(data.split(' ')[1], '', { flag: 'wx' }, (error) => {
-          if (error) throw new Error(ERROR_MESSAGE);
+          if (error) {
+            console.log(error);
+            throw new Error(ERROR_MESSAGE);
+          }
         });
 
       } catch (error) {
-        console.error('error: ', 'no such file in directory or wrong path');
+        console.error('error: ', 'something went wrong');
       }
     }
 
-    console.log(`👉 You are currently in ${process.cwd()}`);
+    if (data.startsWith('rn')) {
+      const pathOldFile = data.split(' ')[1];
+      const newFileName = data.split(' ')[2];
+      const pathToNewFile = pathOldFile.split('/');
+      pathToNewFile.pop();
+      let pathNewFile = path.join(pathToNewFile.join('/'), newFileName);
+      rename(pathOldFile, pathNewFile)
+        .catch((error) => {
+          console.log(error);
+          throw new Error('something went wrong');
+        });
+    }
+
+    if (data.startsWith('cp')) {
+      try {
+        const path_to_file = data.split(' ')[1];
+        const path_to_new_directory = data.split(' ')[2];
+        const current_path = process.cwd();
+        const full_path_to_file = path.join(current_path, path_to_file);
+        const file_name = path_to_file.split('/').pop();
+        const full_path_to_new_file = path.join(path_to_new_directory, file_name);
+
+        /*         fs.writeFile(full_path_to_new_file, '', { flag: 'wx' }, (error) => {
+                  if (error) {
+                    console.log(error);
+                    throw new Error('Something went wrong, maybe file already exists');
+                  }
+                }); */
+        const readStream = fs.createReadStream(full_path_to_file, 'utf-8');
+        const writable = fs.createWriteStream(full_path_to_new_file);
+        let result = '';
+
+        readStream.on('data', (chunk) => {
+          result += chunk;
+        });
+        readStream.on('end', () => {
+          writable.write(result);
+        });
+        readStream.on('error', (error) => {
+          console.log(error);
+          throw new Error('Something went wrong');
+        });
+
+      } catch (error) {
+        console.log(error);
+        console.error('error: ', 'Something went wrong');
+      }
+    }
+
+    setTimeout(() => {
+      console.log(`👉 You are currently in ${process.cwd()}`);
+    }, 2000);
+
   });
 
   process.on('SIGINT', () => {
-    console.log(`Thank you for using File Manager, ${userName}, goodbye!`);
+    console.log(`Thank you for using File Manager, ${userName()}, goodbye!`);
     console.log(`🎁 Merry Christmas and Happy New Year! 🎄`);
     process.exit();
   });
