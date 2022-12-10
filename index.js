@@ -107,20 +107,30 @@ const app = () => {
                     throw new Error('Something went wrong, maybe file already exists');
                   }
                 }); */
-        const readStream = fs.createReadStream(full_path_to_file, 'utf-8');
-        const writable = fs.createWriteStream(full_path_to_new_file);
-        let result = '';
 
-        readStream.on('data', (chunk) => {
-          result += chunk;
+        fs.open(full_path_to_new_file, 'r', (err, fd) => {
+          if (err) {
+            const readStream = fs.createReadStream(full_path_to_file, 'utf-8');
+            const writable = fs.createWriteStream(full_path_to_new_file);
+            let result = '';
+
+            readStream.on('data', (chunk) => {
+              result += chunk;
+            });
+            readStream.on('end', () => {
+              writable.write(result);
+            });
+            readStream.on('error', (error) => {
+              console.log(error);
+              throw new Error('Something went wrong');
+            });
+          } else {
+            console.log('file already exists');
+          }
         });
-        readStream.on('end', () => {
-          writable.write(result);
-        });
-        readStream.on('error', (error) => {
-          console.log(error);
-          throw new Error('Something went wrong');
-        });
+
+
+
 
       } catch (error) {
         console.log(error);
