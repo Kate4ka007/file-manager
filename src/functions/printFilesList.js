@@ -1,12 +1,7 @@
 import process from 'process';
 import { readdir } from 'fs/promises';
+import { File } from '../assets/file';
 
-class File {
-  constructor(name, type) {
-    this.Name = name;
-    this.Type = type;
-  }
-}
 
 export const printFilesList = () => {
   const filesList = readdir(process.cwd(), { withFileTypes: true }).catch((error) => {
