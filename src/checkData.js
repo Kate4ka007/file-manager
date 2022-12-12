@@ -6,6 +6,8 @@ import { renameFile } from './functions/renameFile.js';
 import { addEmptyFile } from './functions/addEmptyFile.js';
 import { printFilesList } from './functions/printFilesList.js';
 import { moveFile } from './functions/moveFile.js';
+import { remove } from './functions/remove.js';
+import path from 'path';
 
 export const checkData = (data) => {
 
@@ -65,6 +67,18 @@ export const checkData = (data) => {
 
     try {
       copyFile(data, true);
+    } catch (error) {
+      console.log(error);
+      console.error('error: ', 'Something went wrong');
+    }
+
+  } else if (data.startsWith('rm')) {
+
+    try {
+      const path_to_file = data.split(' ')[1];
+      const current_path = process.cwd();
+      const full_path_to_file = path.join(current_path, path_to_file);
+      remove(full_path_to_file);
     } catch (error) {
       console.log(error);
       console.error('error: ', 'Something went wrong');
