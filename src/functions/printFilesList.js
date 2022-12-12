@@ -1,6 +1,6 @@
 import process from 'process';
 import { readdir } from 'fs/promises';
-import { File } from '../assets/file';
+import { File } from '../assets/file.js';
 
 
 export const printFilesList = () => {

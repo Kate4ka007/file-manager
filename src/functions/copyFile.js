@@ -1,9 +1,10 @@
 import path from "path";
 import process from 'process';
 import fs from 'fs';
+import { remove } from "./remove.js";
 
 
-export const copyFile = (data) => {
+export const copyFile = (data, flag = false) => {
   const path_to_file = data.split(' ')[1];
   const path_to_new_directory = data.split(' ')[2];
   const current_path = process.cwd();
@@ -22,6 +23,9 @@ export const copyFile = (data) => {
       });
       readStream.on('end', () => {
         writable.write(result);
+        if (flag) {
+          remove(full_path_to_file);
+        }
       });
       readStream.on('error', (error) => {
         console.log(error);

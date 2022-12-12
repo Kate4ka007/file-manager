@@ -5,6 +5,7 @@ import goodBye from './functions/goodBye.js';
 import { renameFile } from './functions/renameFile.js';
 import { addEmptyFile } from './functions/addEmptyFile.js';
 import { printFilesList } from './functions/printFilesList.js';
+import { moveFile } from './functions/moveFile.js';
 
 export const checkData = (data) => {
 
@@ -55,6 +56,15 @@ export const checkData = (data) => {
 
     try {
       copyFile(data);
+    } catch (error) {
+      console.log(error);
+      console.error('error: ', 'Something went wrong');
+    }
+
+  } else if (data.startsWith('mv')) {
+
+    try {
+      copyFile(data, true);
     } catch (error) {
       console.log(error);
       console.error('error: ', 'Something went wrong');
