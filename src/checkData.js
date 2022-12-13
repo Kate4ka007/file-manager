@@ -8,6 +8,7 @@ import { printFilesList } from './functions/printFilesList.js';
 import { moveFile } from './functions/moveFile.js';
 import { remove } from './functions/remove.js';
 import path from 'path';
+import { getOsData } from './functions/getOsDate.js';
 
 export const checkData = (data) => {
 
@@ -83,6 +84,10 @@ export const checkData = (data) => {
       console.log(error);
       console.error('error: ', 'Something went wrong');
     }
+
+  } else if (data.startsWith('os')) {
+
+    getOsData(data);
 
   }
 };
