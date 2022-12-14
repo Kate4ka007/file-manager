@@ -1,7 +1,6 @@
 import { rename } from 'fs/promises';
 import path from 'path';
 
-
 export const renameFile = (data) => {
   const pathOldFile = data.split(' ')[1];
   const newFileName = data.split(' ')[2];

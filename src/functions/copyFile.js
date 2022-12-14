@@ -3,7 +3,6 @@ import process from 'process';
 import fs from 'fs';
 import { remove } from "./remove.js";
 
-
 export const copyFile = (data, flag = false) => {
   const path_to_file = data.split(' ')[1];
   const path_to_new_directory = data.split(' ')[2];
