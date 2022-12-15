@@ -5,10 +5,12 @@ import goodBye from './functions/goodBye.js';
 import { renameFile } from './functions/renameFile.js';
 import { addEmptyFile } from './functions/addEmptyFile.js';
 import { printFilesList } from './functions/printFilesList.js';
-import { moveFile } from './functions/moveFile.js';
 import { remove } from './functions/remove.js';
 import path from 'path';
 import { getOsData } from './functions/getOsDate.js';
+import { getHash } from './functions/getHash.js';
+import { getFullPathToFile } from './functions/getFullPath.js';
+import { compress } from './functions/compressFile.js';
 
 export const checkData = (data) => {
 
@@ -74,20 +76,18 @@ export const checkData = (data) => {
     }
 
   } else if (data.startsWith('rm')) {
-
-    try {
-      const path_to_file = data.split(' ')[1];
-      const current_path = process.cwd();
-      const full_path_to_file = path.join(current_path, path_to_file);
-      remove(full_path_to_file);
-    } catch (error) {
-      console.log(error);
-      console.error('error: ', 'Something went wrong');
-    }
-
+    remove(getFullPathToFile(data));
   } else if (data.startsWith('os')) {
 
     getOsData(data);
+
+  } else if (data.startsWith('hash')) {
+
+    getHash(data);
+
+  } else if (data.startsWith('compress')) {
+
+    compress(data);
 
   }
 };

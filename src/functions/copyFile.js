@@ -1,13 +1,12 @@
 import path from "path";
-import process from 'process';
 import fs from 'fs';
 import { remove } from "./remove.js";
+import { getFullPathToFile } from "./getFullPath.js";
 
 export const copyFile = (data, flag = false) => {
   const path_to_file = data.split(' ')[1];
+  const full_path_to_file = getFullPathToFile(data);
   const path_to_new_directory = data.split(' ')[2];
-  const current_path = process.cwd();
-  const full_path_to_file = path.join(current_path, path_to_file);
   const file_name = path_to_file.split('/').pop();
   const full_path_to_new_file = path.join(path_to_new_directory, file_name);
 
