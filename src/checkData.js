@@ -11,6 +11,7 @@ import { getOsData } from './functions/getOsDate.js';
 import { getHash } from './functions/getHash.js';
 import { getFullPathToFile } from './functions/getFullPath.js';
 import { compress } from './functions/compressFile.js';
+import { decompress } from './functions/decompressFile.js';
 
 export const checkData = (data) => {
 
@@ -88,6 +89,10 @@ export const checkData = (data) => {
   } else if (data.startsWith('compress')) {
 
     compress(data);
+
+  } else if (data.startsWith('decompress')) {
+
+    decompress(data);
 
   }
 };
