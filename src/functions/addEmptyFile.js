@@ -1,7 +1,9 @@
 import fs from 'fs';
+import { getFullPathToFile } from './getFullPath.js';
 
 export const addEmptyFile = (data) => {
-  fs.writeFile(data.split(' ')[1], '', { flag: 'wx' }, (error) => {
+  const path_to_file = getFullPathToFile(data);
+  fs.writeFile(path_to_file, '', { flag: 'wx' }, (error) => {
     if (error) {
       console.log(error);
       throw new Error('Something went wrong');
